@@ -1,24 +1,14 @@
-const express = require('express');
-const jwt = require('jsonwebtoken')
-const app = express();
+import jwt from 'jsonwebtoken'
 
-
-
-app.get('/', (req, res) => {
-    res.json({
-        text: 'api works!'
-    })
-})
-
-app.post('/api/login', (req, res) => {
+export const login = (req, res) => {
     const user = { id: 3 };
     const token = jwt.sign({ user }, 'my_secret_key');
     res.json({
         token
     });
-});
+}
 
-app.get('/api/protected', ensureToken, (req, res) => {
+export const protect = (req, res) => {
     jwt.verify(req.token, 'my_secret_key', (err, data) => {
         if (err) {
             res.sendStatus(403)
@@ -27,9 +17,9 @@ app.get('/api/protected', ensureToken, (req, res) => {
         }
     });
 
-});
+}
 
-function ensureToken(req, res, next) {
+export function ensureToken(req, res, next) {
     const bearerHeader = req.headers['authorization'];
     console.log(bearerHeader);
     if (typeof bearerHeader !== 'undefined') {
@@ -42,10 +32,3 @@ function ensureToken(req, res, next) {
     }
 
 }
-
-// probando ramas
-
-app.listen(3000, () => {
-    console.log('Server on port 3000')
-});
-
