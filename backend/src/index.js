@@ -6,7 +6,7 @@ import piso from './routes/piso.routes.js'
 import sector from './routes/sector.routes.js'
 import ubicacion from './routes/ubicacion.routes.js'
 import activo from './routes/activo.routes.js'
-
+import usuarios from './routes/usuarios.routes.js'
 const app = express();
 
 app.use(express.json());
@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
     })
 })
 
-app.use(auth, operarios, edificio, piso, sector, ubicacion, activo)
+app.use(auth, operarios, edificio, piso, sector, ubicacion, activo, usuarios)
 
 
 
