@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import auth from './routes/auth.routes.js'
 import operarios from './routes/operarios.routes.js'
 import edificio from './routes/edificio.routes.js'
@@ -9,7 +10,11 @@ import activo from './routes/activo.routes.js'
 import usuarios from './routes/usuarios.routes.js'
 const app = express();
 
-app.use(express.json());
+app.use(cors({
+    origin: 'http://localhost:4200', 
+    methods: 'GET,POST,PUT,DELETE', 
+    allowedHeaders: 'Content-Type,Authorization' 
+}));
 
 app.get('/', (req, res) => {
     res.json({

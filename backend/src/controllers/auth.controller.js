@@ -25,7 +25,7 @@ export const login = async (req, res) => {
      res.json({ token });
 }
 
-// Middleware para proteger rutas
+
 export const protect = (req, res, next) => {
     const token = req.headers['authorization']?.split(' ')[1];
 
@@ -43,11 +43,11 @@ export const protect = (req, res, next) => {
     });
 }
 
-// Middleware para verificar roles
+
 export const authorize = (roles) => {
     return (req, res, next) => {
         if (!req.user || !roles.includes(req.user.role)) {
-            return res.sendStatus(403); // Prohibido
+            return res.sendStatus(403); 
         }
         next();
     };
