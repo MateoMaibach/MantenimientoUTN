@@ -1,34 +1,56 @@
 import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
+import { pool } from '../db.js'
 
-export const login = (req, res) => {
-    const user = { id: 3 };
-    const token = jwt.sign({ user }, 'my_secret_key');
-    res.json({
-        token
-    });
-}
 
-export const protect = (req, res) => {
-    jwt.verify(req.token, 'my_secret_key', (err, data) => {
-        if (err) {
-            res.sendStatus(403)
-        } else {
-            res.json({text: 'protected',data})
-        }
-    });
+export const login = async (req, res) => {
+    const { username, password } = req.body;
 
-}
+    
+    const [rows] = await pool.query('SELECT * FROM usuarios WHERE username = ?', [username]);
+    const user = rows[0];
 
-export function ensureToken(req, res, next) {
-    const bearerHeader = req.headers['authorization'];
-    console.log(bearerHeader);
-    if (typeof bearerHeader !== 'undefined') {
-        const bearer = bearerHeader.split(" ");
-        const bearerToken = bearer[1];
-        req.token = bearerToken;
-        next()
-    } else {
-        res.sendStatus(403);
+    if (!user) {
+        return res.status(404).json({ message: 'Usuario no encontrado' });
     }
 
+    
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+        return res.status(403).json({ message: 'Contraseña incorrecta' });
+    }
+     
+    const token = jwt.sign({ id: user.id_usuarios, role: user.role }, 'my_secret_key', { expiresIn: '1h' });
+
+     res.json({ token });
 }
+
+// Middleware para proteger rutas
+export const protect = (req, res, next) => {
+    const token = req.headers['authorization']?.split(' ')[1];
+
+    if (!token) {
+        return res.sendStatus(403);
+    }
+
+    jwt.verify(token, 'my_secret_key', (err, decoded) => {
+        if (err) {
+            return res.sendStatus(403);
+        }
+
+        req.user = decoded; 
+        next();
+    });
+}
+
+// Middleware para verificar roles
+export const authorize = (roles) => {
+    return (req, res, next) => {
+        if (!req.user || !roles.includes(req.user.role)) {
+            return res.sendStatus(403); // Prohibido
+        }
+        next();
+    };
+}
+
+
