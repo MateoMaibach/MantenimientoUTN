@@ -8,6 +8,7 @@ import sector from './routes/sector.routes.js'
 import ubicacion from './routes/ubicacion.routes.js'
 import activo from './routes/activo.routes.js'
 import usuarios from './routes/usuarios.routes.js'
+import tareas from './routes/tarea.routes.js'
 const app = express();
 
 app.use(cors({
@@ -22,7 +23,7 @@ app.get('/', (req, res) => {
     })
 })
 
-app.use(auth, operarios, edificio, piso, sector, ubicacion, activo, usuarios)
+app.use(auth, operarios, edificio, piso, sector, ubicacion, activo, usuarios, tareas)
 
 
 
