@@ -11,7 +11,7 @@ import ubicacion from './routes/ubicacion.routes.js';
 import activo from './routes/activo.routes.js';
 import usuarios from './routes/usuarios.routes.js';
 import tareas from './routes/tarea.routes.js';
-
+import ordentrabajo from './routes/ordentrabajo.routes.js'
 const app = express();
 
 
@@ -42,5 +42,6 @@ app.use(ubicacion);
 app.use(activo);
 app.use(usuarios);
 app.use(tareas);
+app.use(ordentrabajo)
 
 export default app;
