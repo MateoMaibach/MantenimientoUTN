@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { GetEdificio } from "../controllers/edificio.controller.js";
+import { GetEdificio, postEdificio, deleteEdificio } from "../controllers/edificio.controller.js";
 const router = Router()
 
 router.get('/api/edificio', GetEdificio);
-
+router.post('/api/edificio', postEdificio);
+router.delete('/api/edificio/:id_edificio', deleteEdificio);
 
 
 export default router
