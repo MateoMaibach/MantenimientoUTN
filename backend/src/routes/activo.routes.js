@@ -1,9 +1,10 @@
 import { Router } from "express";
-import {getActivo} from '../controllers/activo.controller.js'
+import {deleteActivo, getActivo, postActivo} from '../controllers/activo.controller.js'
 const router = Router()
 
 
 router.get('/api/activo', getActivo );
-
+router.post('/api/activo', postActivo);
+router.delete('/api/activo/:id_activo', deleteActivo);
 
 export default router
