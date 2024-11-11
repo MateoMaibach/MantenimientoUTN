@@ -71,3 +71,44 @@ export const deleteOrden = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+// Backend (Node.js/Express)
+export const getOrdenOP = async (req, res) => {
+    const operario_username = req.params.operario_username;
+    try {
+        const [ordenesTrabajo] = await pool.query('SELECT * FROM ordentrabajo WHERE operario_username = ?', [operario_username]);
+        
+        if (ordenesTrabajo.length === 0) {
+            return res.status(404).json({ message: 'No se encontraron órdenes de trabajo para este operario.' });
+        }
+
+        res.json(ordenesTrabajo);
+    } catch (error) {
+        console.error(error);  // Imprimir el error en la consola para depuración
+        res.status(500).json({ error: 'Error al obtener órdenes de trabajo' });
+    }
+};
+
+ // Archivo: controllers/ordentrabajoController.js o similar
+
+// Función para obtener una orden de trabajo por su ID
+export const getOrdenID = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const [orden] = await pool.query('SELECT * FROM ordentrabajo WHERE id_orden = ?', [id]);
+
+        if (!orden.length) {
+            return res.status(404).json({ message: 'Orden de trabajo no encontrada' });
+        }
+
+        res.json(orden[0]);
+    } catch (error) {
+        console.error('Error al obtener la orden de trabajo:', error);
+        res.status(500).json({ message: 'Error al obtener la orden de trabajo' });
+    }
+};
+
+
+
+  
