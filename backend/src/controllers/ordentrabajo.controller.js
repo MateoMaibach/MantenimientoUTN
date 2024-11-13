@@ -72,7 +72,7 @@ export const deleteOrden = async (req, res) => {
     }
 };
 
-// Backend (Node.js/Express)
+
 export const getOrdenOP = async (req, res) => {
     const operario_username = req.params.operario_username;
     try {
@@ -110,5 +110,20 @@ export const getOrdenID = async (req, res) => {
 };
 
 
+// Método para obtener órdenes de trabajo por tipo de activo
+export const getOrdenAC = async (req, res) => {
+    const { tipo_activo } = req.params;
 
-  
+    try {
+        const [orden] = await pool.query('SELECT * FROM ordentrabajo WHERE tipo_activo = ?', [tipo_activo]);
+
+        if (!orden.length) {
+            return res.status(404).json({ message: 'No se encontraron órdenes de trabajo para este tipo de activo' });
+        }
+
+        res.json(orden); // Enviar todas las órdenes asociadas al tipo de activo
+    } catch (error) {
+        console.error('Error al obtener las órdenes de trabajo:', error);
+        res.status(500).json({ message: 'Error al obtener las órdenes de trabajo' });
+    }
+};
