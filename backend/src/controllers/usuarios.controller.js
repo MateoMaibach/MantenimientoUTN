@@ -41,12 +41,12 @@ export const postUsuarios = async (req, res) => {
 
 export const deleteUsuario = async (req, res) => {
     try {
-        const { id_usuarios } = req.params; // Obtener el id_usuarios desde los parámetros de la URL
+        const { id_usuarios } = req.params;
 
-        // Ejecutar la consulta para eliminar el usuario por id_usuarios
+
         const [rows] = await pool.query('DELETE FROM usuarios WHERE id_usuarios = ?', [id_usuarios]);
 
-        // Verificar si se eliminó al menos un usuario
+
         if (rows.affectedRows > 0) {
             res.send('Usuario eliminado');
         } else {
