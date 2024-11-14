@@ -19,11 +19,11 @@ export const login = async (req, res) => {
             return res.status(403).json({ message: 'Contraseña incorrecta' });
         }
 
-        // Incluir el username en el payload del token
+        
         const token = jwt.sign(
             { 
                 id: user.id_usuarios, 
-                username: user.username,  // Agregar el username al token
+                username: user.username,  
                 role: user.role 
             },
             'my_secret_key', 
