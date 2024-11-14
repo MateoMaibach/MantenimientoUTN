@@ -13,7 +13,7 @@ export const postOrden = async (req, res) => {
             ubicacion_descripcion,
             operario_username,
             tipo_activo,
-            tareas // Recibimos las tareas como JSON
+            tareas 
         } = req.body;
 
         const query = `INSERT INTO ordentrabajo 
@@ -27,7 +27,7 @@ export const postOrden = async (req, res) => {
             OT_num,
             fecha,
             observacion,
-            '', // código único
+            '', 
             edificio_nombre,
             tarea_descripcion,
             sector_nombre,
@@ -35,7 +35,7 @@ export const postOrden = async (req, res) => {
             ubicacion_descripcion,
             operario_username,
             tipo_activo,
-            tareas // Almacenamos JSON en la columna tareas
+            tareas 
         ]);
 
         res.status(201).json({
@@ -58,15 +58,24 @@ export const getOrdenes = async (req, res) => {
 
 export const deleteOrden = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { id } = req.params; 
 
+        console.log(`Eliminando la orden con id_orden: ${id}`); 
+
+       
         const [orderRows] = await pool.query('SELECT * FROM ordentrabajo WHERE id_orden = ?', [id]);
+
         if (orderRows.length === 0) {
             return res.status(404).json({ message: 'Orden de trabajo no encontrada' });
         }
 
         const [result] = await pool.query('DELETE FROM ordentrabajo WHERE id_orden = ?', [id]);
-        res.status(200).json({ message: 'Orden de trabajo eliminada con éxito' });
+
+        if (result.affectedRows > 0) {
+            return res.status(200).json({ message: 'Orden de trabajo eliminada con éxito' });
+        } else {
+            return res.status(404).json({ message: 'No se pudo eliminar la orden de trabajo' });
+        }
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -84,14 +93,12 @@ export const getOrdenOP = async (req, res) => {
 
         res.json(ordenesTrabajo);
     } catch (error) {
-        console.error(error);  // Imprimir el error en la consola para depuración
+        console.error(error);  
         res.status(500).json({ error: 'Error al obtener órdenes de trabajo' });
     }
 };
 
- // Archivo: controllers/ordentrabajoController.js o similar
-
-// Función para obtener una orden de trabajo por su ID
+ 
 export const getOrdenID = async (req, res) => {
     const { id } = req.params;
 
@@ -110,7 +117,7 @@ export const getOrdenID = async (req, res) => {
 };
 
 
-// Método para obtener órdenes de trabajo por tipo de activo
+
 export const getOrdenAC = async (req, res) => {
     const { tipo_activo } = req.params;
 
@@ -121,7 +128,7 @@ export const getOrdenAC = async (req, res) => {
             return res.status(404).json({ message: 'No se encontraron órdenes de trabajo para este tipo de activo' });
         }
 
-        res.json(orden); // Enviar todas las órdenes asociadas al tipo de activo
+        res.json(orden); 
     } catch (error) {
         console.error('Error al obtener las órdenes de trabajo:', error);
         res.status(500).json({ message: 'Error al obtener las órdenes de trabajo' });
