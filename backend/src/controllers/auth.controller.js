@@ -19,7 +19,16 @@ export const login = async (req, res) => {
             return res.status(403).json({ message: 'Contraseña incorrecta' });
         }
 
-        const token = jwt.sign({ id: user.id_usuarios, role: user.role }, 'my_secret_key', { expiresIn: '1h' });
+        // Incluir el username en el payload del token
+        const token = jwt.sign(
+            { 
+                id: user.id_usuarios, 
+                username: user.username,  // Agregar el username al token
+                role: user.role 
+            },
+            'my_secret_key', 
+            { expiresIn: '1h' }
+        );
 
         res.json({ token });
 
@@ -28,6 +37,7 @@ export const login = async (req, res) => {
         res.status(500).json({ message: 'Error en el servidor' });
     }
 };
+
 
 
 export const protect = (req, res, next) => {
