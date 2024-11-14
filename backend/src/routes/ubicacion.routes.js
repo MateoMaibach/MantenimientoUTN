@@ -5,6 +5,6 @@ const router = Router()
 
 router.get('/api/ubicacion', getUbicacion );
 router.post('/api/ubicacion', postUbicacion);
-router.delete('/api/ubicacion/:id_ubicacion', deleteUbicacion);
+router.delete('/api/ubicacion', deleteUbicacion);
 
 export default router

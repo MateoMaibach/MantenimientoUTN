@@ -12,20 +12,29 @@ export const getUbicacion = async (req, res) => {
 
 export const postUbicacion = async (req, res) => {
     try {
-        const { descripcion, existe } = req.body;
+        const { descripcion } = req.body; 
 
-        // Obtener el último num_tag registrado
+        
+        if (!descripcion) {
+            return res.status(400).json({ error: 'Falta el dato requerido: descripcion' });
+        }
+
+        
+        const existe = true;
+
+       
         const [lastUbicacion] = await pool.query('SELECT MAX(num_tag) AS max_num_tag FROM ubicacion');
-
-        // Si no hay ubicaciones, el primer num_tag será 1, sino, incrementamos el último
         const num_tag = lastUbicacion[0].max_num_tag ? lastUbicacion[0].max_num_tag + 1 : 1;
 
-        // Insertar la nueva ubicación con el num_tag generado
-        const result = await pool.query('INSERT INTO ubicacion (num_tag, descripcion, existe) VALUES (?, ?, ?)', [num_tag, descripcion, existe]);
+        
+        await pool.query(
+            'INSERT INTO ubicacion (num_tag, descripcion, existe) VALUES (?, ?, ?)', 
+            [num_tag, descripcion, existe]
+        );
 
-        // Responder con el éxito
         res.status(201).json({
-            message: "Ubicación creada con éxito"
+            message: "Ubicación creada con éxito",
+            
         });
     } catch (error) {
         console.error('Error al crear ubicación:', error);
@@ -33,21 +42,22 @@ export const postUbicacion = async (req, res) => {
     }
 };
 
+
 export const deleteUbicacion = async (req, res) => {
     try {
-        const { id_ubicacion } = req.params;
+        const { descripcion } = req.query;
 
-        // Verificar si la ubicación existe
-        const [existingUbicacion] = await pool.query('SELECT * FROM ubicacion WHERE id_ubicacion = ?', [id_ubicacion]);
+        
+        const [existingUbicacion] = await pool.query('SELECT * FROM ubicacion WHERE descripcion = ?', [descripcion]);
 
         if (existingUbicacion.length === 0) {
             return res.status(404).json({ error: "Ubicación no encontrada" });
         }
 
-        // Eliminar la ubicación
-        await pool.query('DELETE FROM ubicacion WHERE id_ubicacion = ?', [id_ubicacion]);
+        
+        await pool.query('DELETE FROM ubicacion WHERE descripcion = ?', [descripcion]);
 
-        // Responder con el mensaje de éxito
+        
         res.json({ message: "Ubicación eliminada con éxito" });
     } catch (error) {
         console.error('Error al eliminar ubicación:', error);

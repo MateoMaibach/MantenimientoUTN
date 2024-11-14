@@ -5,6 +5,6 @@ const router = Router()
 
 router.get('/api/activo', getActivo );
 router.post('/api/activo', postActivo);
-router.delete('/api/activo/:id_activo', deleteActivo);
+router.delete('/api/activo', deleteActivo);
 
 export default router
