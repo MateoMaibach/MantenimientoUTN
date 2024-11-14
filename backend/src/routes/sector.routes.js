@@ -5,7 +5,7 @@ const router = Router()
 
 router.get('/api/sector', getSector );
 router.post('/api/sector', postSector);
-router.delete('/api/sector/:id_sector', deleteSector);
+router.delete('/api/sector', deleteSector);
 
 
 export default router

@@ -4,7 +4,8 @@ const router = Router()
 
 router.get('/api/edificio', GetEdificio);
 router.post('/api/edificio', postEdificio);
-router.delete('/api/edificio/:id_edificio', deleteEdificio);
+router.delete('/api/edificio', deleteEdificio);
+
 
 
 export default router
